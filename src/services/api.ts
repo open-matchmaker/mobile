@@ -1,7 +1,21 @@
 import axios from 'axios'
 
-const instance = axios.create({
-  baseURL: 'https://matchmaker-node.herokuapp.com/',
+const api = axios.create({
+  baseURL: 'https://matchmaker-node.herokuapp.com/'
 });
 
-export default instance
+api.interceptors.request.use(async (config) => {
+  console.log(`${config.method?.toUpperCase()} ${config.url}`)
+
+  return config
+}, (error) => {
+  console.log(error)
+  return Promise.reject(error)
+});
+
+api.interceptors.response.use(async (response) => response, (error) => {
+  console.log(error, error.response.data)
+  return Promise.reject(error)
+});
+
+export default api;
