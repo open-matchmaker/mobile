@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, createContext, useEffect } from "react";
 import { View } from "react-native";
 import * as SplashScreen from 'expo-splash-screen';;
+import { AxiosError } from "axios";
 
 import { LoginDto } from "../schemas/session";
 import { User } from "../schemas/user";
@@ -65,6 +66,46 @@ export default function SessionContextProvider({ children }: Props) {
       }
     }
 
+    function injectInterceptor() {
+      console.log('injectInterceptor');
+      api.interceptors.response.use((response) => response, async (error: AxiosError) => {
+        const { config: originalConfig } = error
+        originalConfig.retry = originalConfig.retry || 0
+
+        if (originalConfig?.url !== '/session' && error.response) {
+          if (error.response.status === 401 && originalConfig.retry < 2) {
+            try {
+              console.log('Unauthorized, refreshing session...');
+              originalConfig.retry += 1
+
+              const session = await SessionService.refresh();
+
+              api.defaults.headers.common.Authorization = `Bearer ${session.token}`;
+
+              await StorageService.storeData("token", session.token);
+
+              return api({
+                ...originalConfig, headers: {
+                  ...originalConfig.headers,
+                  Authorization: `Bearer ${session.token}`
+                }
+              });
+            } catch (err) {
+              console.warn('Error on refreshing session', err);
+            }
+          } else {
+            console.log('Impossible to refresh session, aborting...');
+          }
+        }
+
+        console.warn(`[${error.message}] ${originalConfig?.method?.toUpperCase()} ${originalConfig?.url
+          } ${JSON.stringify(error?.response?.data, null, 2) || ''} retry: ${originalConfig?.retry
+          }`)
+        return Promise.reject(error)
+      });
+    }
+
+    injectInterceptor();
     loadResourcesAsync();
   }, []);
 

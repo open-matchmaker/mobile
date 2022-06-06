@@ -10,5 +10,15 @@ export default {
     }
 
     throw new Error((response.data as Error).message);
+  },
+
+  refresh: async () => {
+    const response = await api.get<Session | Error>('/session');
+
+    if (response.status === 200) {
+      return response.data as Session;
+    }
+
+    throw new Error((response.data as Error).message);
   }
 }
