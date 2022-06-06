@@ -43,7 +43,7 @@ export default function SignIn({ navigation }: NativeStackScreenProps<RootStackP
               <Text style={styles.title}>E-mail</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Digite um e-mail"
+                placeholder="Digite seu e-mail"
                 keyboardType='email-address'
                 autoCapitalize='none'
                 value={values.email}
