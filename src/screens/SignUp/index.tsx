@@ -25,7 +25,7 @@ export default function SignUp({ navigation }: NativeStackScreenProps<RootStackP
   const onSubmit = useCallback(async (values: SignUpDto, helpers: FormikHelpers<SignUpDto>) => {
     try {
 
-    const response = await UserService.signUp(values)
+    const response = await UserService.create(values)
     navigation.navigate('SignIn')
     } catch (error: any) {
       alert(error + " ocorreu algum erro no cadastro, tente novamente mais tarde")
