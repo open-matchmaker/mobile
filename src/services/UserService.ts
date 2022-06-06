@@ -7,7 +7,7 @@ export default {
     const response = await api.get<User>('/user/whoami');
     return response.data;
   },
-  async signUp(values:SignUpDto){
+  async create(values:SignUpDto){
     const response = await api.post('/user',values)
     return response
   }
