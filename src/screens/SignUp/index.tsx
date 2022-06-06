@@ -11,6 +11,7 @@ import { RootStackParamList } from '../../@types/routes';
 
 import instance  from '../../services/api'
 
+import UserService from '../../services/UserService';
 
 
 
@@ -24,7 +25,7 @@ export default function SignUp({ navigation }: NativeStackScreenProps<RootStackP
   const onSubmit = useCallback(async (values: SignUpDto, helpers: FormikHelpers<SignUpDto>) => {
     try {
 
-    await instance.post('/user', values)
+    const response = await UserService.signUp(values)
     navigation.navigate('SignIn')
     } catch (error: any) {
       alert(error + " ocorreu algum erro no cadastro, tente novamente mais tarde")
