@@ -28,7 +28,12 @@ export default function PostOverview({ post, disabled }: Props) {
   return (
     <TouchableOpacity style={styles.container} disabled={disabled} onPress={() => handlePress()}>
       <View style={styles.header}>
-        <Text style={styles.fontBold}>{`${post.creator.username} ${post.postsId ? 'comentou' : 'postou'}`}</Text>
+        <Text
+          style={styles.fontBold}
+          onPress={() => navigation.push('App', { screen: 'Profile', params: { user: post.creator } })}
+        >
+          {`${post.creator.username} ${post.postsId ? 'comentou' : 'postou'}`}
+        </Text>
         <Caption>{dayjs(post.createdAt).fromNow()}</Caption>
       </View>
 
