@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { AppStackParamList } from "../../@types/routes";
-import PostService from "../../services/Post.Service";
+import PostService from "../../services/PostService";
 import { Post as IPost } from "../../schemas/post";
 import PostOverview from "../../components/PostOverview";
 import PostForm from "../../components/PostForm";

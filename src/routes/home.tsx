@@ -4,6 +4,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { HomeTabParamList } from '../@types/routes';
 
 import Feed from '../screens/Feed';
+import MyProfile from '../screens/MyProfile';
 
 const { Navigator, Screen } = createBottomTabNavigator<HomeTabParamList>();
 
@@ -20,6 +21,7 @@ export default function Home() {
           )
         }}
       />
+      <Screen name="Meu Perfil" component={MyProfile} options={{headerShown:false,tabBarIcon:({focused,color,size})=>(<FontAwesome name='user' size={size} color={color}/>)}} />
     </Navigator>
   )
 }

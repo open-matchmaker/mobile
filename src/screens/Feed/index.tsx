@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { View, Button, FlatList, KeyboardAvoidingView, Platform } from "react-native";
 
 import { Post } from '../../schemas/post';
-import PostService from '../../services/Post.Service';
+import PostService from '../../services/PostService';
 
 import useApp from "../../hooks/useApp";
 import PostOverview from "../../components/PostOverview";

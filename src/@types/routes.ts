@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
+import { User } from "../schemas/user";
 
 export type RootStackParamList = {
   Welcome: undefined
@@ -12,8 +13,10 @@ export type AppStackParamList = {
   Post: {
     id: number
   }
+  UserProfile: {user:User}
 }
 
 export type HomeTabParamList = {
   Feed: undefined
+  MyProfile: undefined
 }
