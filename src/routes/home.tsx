@@ -21,7 +21,21 @@ export default function Home() {
           )
         }}
       />
-      <Screen name="Meu Perfil" component={MyProfile} options={{headerShown:false,tabBarIcon:({focused,color,size})=>(<FontAwesome name='user' size={size} color={color}/>)}} />
+      <Screen
+        name="MyProfile"
+        component={MyProfile}
+        options={{
+          headerShown: false,
+          title: "Meu Perfil",
+          tabBarIcon: ({ focused, color, size }) => (
+            <FontAwesome
+              name='user'
+              size={size}
+              color={color}
+            />
+          )
+        }}
+      />
     </Navigator>
   )
 }
