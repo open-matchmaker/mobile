@@ -1,23 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { User } from "../../schemas/user";
-import UserProfile from "../UserProfile/index";
-import UserService from "../../services/UserService";
+import React from "react";
 
+import useApp from "../../hooks/useApp";
 
-export default function MyProfile(){
-    const [user, setUser] = useState<User>();
+import UserProfile from "../../components/UserProfile/index";
 
-    async function getUser(){ 
-        const user = await UserService.whoami()
-        setUser(user)
-        console.log(user)
-    };
+export default function MyProfile() {
+  const { account } = useApp();
 
-    useEffect(() => {
-        getUser();
-    }, []);
-        
-    return (
-        <UserProfile {...user}/>
-    );
+  return (
+    <UserProfile user={account} />
+  );
 }
