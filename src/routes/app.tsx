@@ -5,7 +5,7 @@ import AppContextProvider from '../contexts/app';
 
 import Home from './home';
 import Post from '../screens/Post';
-import UserProfile from '../screens/UserProfile';
+import Profile from '../screens/Profile';
 
 const { Navigator, Screen } = createNativeStackNavigator<AppStackParamList>();
 
@@ -15,7 +15,7 @@ export default function Routes() {
       <Navigator initialRouteName='Home'>
         <Screen name="Home" component={Home} options={{ headerShown: false }} />
         <Screen name="Post" component={Post} />
-        <Screen name="UserProfile" component={UserProfile}/>
+        <Screen name="Profile" component={Profile} />
       </Navigator>
     </AppContextProvider>
   )

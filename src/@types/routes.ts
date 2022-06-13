@@ -13,7 +13,9 @@ export type AppStackParamList = {
   Post: {
     id: number
   }
-  UserProfile: {user:User}
+  Profile: {
+    user: User
+  }
 }
 
 export type HomeTabParamList = {
