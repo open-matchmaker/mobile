@@ -2,7 +2,7 @@ import axios from 'axios'
 import Constants from 'expo-constants';
 
 const api = axios.create({
-  baseURL: Constants.manifest?.extra?.REACT_APP_API_URL || "http://localhost:3333",
+  baseURL: Constants.manifest?.extra?.REACT_APP_API_URL || "https://matchmaker-node.herokuapp.com/",
 });
 
 api.interceptors.request.use(async (config) => {
