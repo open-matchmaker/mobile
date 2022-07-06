@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import useApp from "../../hooks/useApp";
+import UserService from "../../services/UserService";
 
 import { User } from "../../schemas/user";
 
@@ -12,37 +13,45 @@ function addFriend(){
   console.log("add friend");
 }
 
-function generateFriendButton(
-  // requestSent:Boolean, requestReceived:Boolean, isMyFriend:Boolean,
-  isMe:Boolean){
+function generateFriendButton( requestSent:boolean, requestReceived:boolean, isMyFriend:boolean, isMe:boolean, user:User ){
 
   if(isMe){
-    return null;
+    return(
+      <View>
+        <TouchableOpacity style={styles.button}><Text style={styles.buttonText}>Editar Perfil</Text></TouchableOpacity>
+      </View>
+    );
   }
 
-  // if(requestSent && !requestReceived){
-  //   return (
-  //     <View style={styles.friendButton}>
-  //       <Text style={styles.friendButtonText}>Request Sent</Text>
-  //     </View>
-  //   );
-  // }
+  if(
+    requestSent && !requestReceived
+    ){
+    return (
+      <View>
+        <TouchableOpacity style={styles.button} disabled><Text style={styles.buttonText}>Solicitação enviada</Text></TouchableOpacity>
+      </View>
+    );
+  }
 
-  // if(requestReceived && !requestSent){
-  //   return (
-  //     <View style={styles.friendButton}>
-  //       <Text style={styles.friendButtonText}>Accept Request</Text>
-  //     </View>
-  //   );
-  // }
+  if(
+    requestReceived && !requestSent
+    ){
+    return (
+      <View>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest(user.id)}><Text style={styles.buttonText}>Aceitar como amigo</Text></TouchableOpacity>
+      </View>
+    );
+  }
 
-  // if(isMyFriend){
-  //   return (
-  //     <View style={styles.friendButton}>
-  //       <Text style={styles.friendButtonText}>Friends</Text>
-  //     </View>
-  //   );
-  // }
+  if(
+    isMyFriend
+    ){
+    return (
+      <View>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.rejectFriendRequest(user.id)}><Text style={styles.buttonText}>Desfazer amizade</Text></TouchableOpacity>
+      </View>
+    );
+  }
 
 }
 
@@ -51,22 +60,24 @@ export default function UserProfile({ user }: Props) {
   const profileOwner = user;
   const me = useApp().account;
   const isMe = profileOwner.id === me.id;
+  let requestSent : boolean = false;
+  let requestReceived : boolean = false;
+  let isMyFriend : boolean = false;
   try{
     
-    const requestSent = me.userFriends.some((friend:User) => friend.id === profileOwner.id);
-    const requestReceived = me.friendUserFriends.some((friend:User) => friend.id === profileOwner.id);
+    requestSent = me.userFriends.some((friend:User) => friend.id === profileOwner.id);
+    requestReceived = me.friendUserFriends.some((friend:User) => friend.id === profileOwner.id);
 
-    const isMyFriend = requestSent && requestReceived;
+    isMyFriend = requestSent && requestReceived;
   }
   catch{
     console.log("erro ao caregar listas de amigos :(");
   }
   finally{
-    // const isMe = me.id === profileOwner.id;
     console.log(isMe, profileOwner, me)
 
-    // generateFriendButton(requestSent, requestReceived, isMyFriend, isMe);
   }
+  
 
   return (
     <View style={styles.container}>
@@ -87,12 +98,12 @@ export default function UserProfile({ user }: Props) {
             Bio: asldjaj{user.bio}
           </Text>
             <Text style={styles.text}>
-              Joga os jogos: {user.playsGame} X, Y E Z
+              Joga os jogos: {user.playsGames} X, Y E Z
             </Text>
-          {generateFriendButton(isMe)}
             <Text style={styles.text}>
-            seguindo: xxx | seguidores: yyy
+            seguindo: xxx 
             </Text>
+          {generateFriendButton(requestSent, requestReceived, isMyFriend, isMe, user)}
         </View>
       </View>
     </View>
@@ -104,7 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#38a69d',
     alignItems: 'center',
-    // justifyContent:'center',
+   
   },
   imageContainer: {
     height: 340,
@@ -136,7 +147,7 @@ const styles = StyleSheet.create({
   textContainer: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+
     height: 26,
     minWidth: 169,
 
@@ -146,5 +157,21 @@ const styles = StyleSheet.create({
   text: {
     alignSelf: 'center',
     fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#38a69d',
+    width: '100%',
+    borderRadius: 4,
+    paddingVertical: 8,
+    marginTop: 14,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#FFF',
+    fontWeight: 'bold'
   }
 });
+
+
