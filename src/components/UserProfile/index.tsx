@@ -4,6 +4,10 @@ import useApp from "../../hooks/useApp";
 import UserService from "../../services/UserService";
 
 import { User } from "../../schemas/user";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AppStackParamList, RootStackParamList } from "../../@types/routes";
+import { useNavigation } from "@react-navigation/native";
+
 
 interface Props {
   user: User;
@@ -13,12 +17,12 @@ function addFriend(){
   console.log("add friend");
 }
 
-function generateFriendButton( requestSent:boolean, requestReceived:boolean, isMyFriend:boolean, isMe:boolean, user:User ){
-
+function generateFriendButton( requestSent:boolean, requestReceived:boolean, isMyFriend:boolean, isMe:boolean, user:User) {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   if(isMe){
     return(
       <View>
-        <TouchableOpacity style={styles.button}><Text style={styles.buttonText}>Editar Perfil</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.push('App', { screen: 'Editor', params: { user: user } })}><Text style={styles.buttonText}>Editar Perfil</Text></TouchableOpacity>
       </View>
     );
   }
