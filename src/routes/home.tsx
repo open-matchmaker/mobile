@@ -5,11 +5,13 @@ import { HomeTabParamList } from '../@types/routes';
 
 import Feed from '../screens/Feed';
 import MyProfile from '../screens/MyProfile';
+import Queue from '../screens/Queue';
 
 const { Navigator, Screen } = createBottomTabNavigator<HomeTabParamList>();
 
 export default function Home() {
   return (
+    
     <Navigator initialRouteName='Feed'>
       <Screen
         name="Feed"
@@ -18,6 +20,20 @@ export default function Home() {
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (
             <FontAwesome name="home" size={size} color={color} />
+          )
+        }}
+      />
+      <Screen
+        name = "Queue"
+        component={Queue}
+        options={{
+          headerShown: false,
+          title: 'Fila',
+          tabBarIcon: ({ focused, color, size }) => (
+            <FontAwesome 
+              name="rocket"
+              size={size}
+              color={color} />
           )
         }}
       />

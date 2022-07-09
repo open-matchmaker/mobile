@@ -21,4 +21,5 @@ export type AppStackParamList = {
 export type HomeTabParamList = {
   Feed: undefined
   MyProfile: undefined
+  Queue: undefined
 }
