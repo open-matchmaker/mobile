@@ -1,13 +1,88 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import useApp from "../../hooks/useApp";
+import UserService from "../../services/UserService";
 
 import { User } from "../../schemas/user";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AppStackParamList, RootStackParamList } from "../../@types/routes";
+import { useNavigation } from "@react-navigation/native";
+
 
 interface Props {
   user: User;
 }
 
+function addFriend(){
+  console.log("add friend");
+}
+
+function generateFriendButton( requestSent:boolean, requestReceived:boolean, isMyFriend:boolean, isMe:boolean, user:User) {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  if(isMe){
+    return(
+      <View>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.push('App', { screen: 'Editor', params: { user: user } })}><Text style={styles.buttonText}>Editar Perfil</Text></TouchableOpacity>
+      </View>
+    );
+  }
+
+  if(
+    requestSent && !requestReceived
+    ){
+    return (
+      <View>
+        <TouchableOpacity style={styles.button} disabled><Text style={styles.buttonText}>Solicitação enviada</Text></TouchableOpacity>
+      </View>
+    );
+  }
+
+  if(
+    requestReceived && !requestSent
+    ){
+    return (
+      <View>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest(user.id)}><Text style={styles.buttonText}>Aceitar como amigo</Text></TouchableOpacity>
+      </View>
+    );
+  }
+
+  if(
+    isMyFriend
+    ){
+    return (
+      <View>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.rejectFriendRequest(user.id)}><Text style={styles.buttonText}>Desfazer amizade</Text></TouchableOpacity>
+      </View>
+    );
+  }
+
+}
+
+
 export default function UserProfile({ user }: Props) {
+  const profileOwner = user;
+  const me = useApp().account;
+  const isMe = profileOwner.id === me.id;
+  let requestSent : boolean = false;
+  let requestReceived : boolean = false;
+  let isMyFriend : boolean = false;
+  try{
+    
+    requestSent = me.userFriends.some((friend:User) => friend.id === profileOwner.id);
+    requestReceived = me.friendUserFriends.some((friend:User) => friend.id === profileOwner.id);
+
+    isMyFriend = requestSent && requestReceived;
+  }
+  catch{
+    console.log("erro ao caregar listas de amigos :(");
+  }
+  finally{
+    console.log(isMe, profileOwner, me)
+
+  }
+  
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -24,8 +99,15 @@ export default function UserProfile({ user }: Props) {
             {user.username}
           </Text>
           <Text style={{ alignSelf: 'center' }}>
-            {user.bio}
+            Bio: asldjaj{user.bio}
           </Text>
+            <Text style={styles.text}>
+              Joga os jogos: {user.playsGames} X, Y E Z
+            </Text>
+            <Text style={styles.text}>
+            seguindo: xxx 
+            </Text>
+          {generateFriendButton(requestSent, requestReceived, isMyFriend, isMe, user)}
         </View>
       </View>
     </View>
@@ -37,7 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#38a69d',
     alignItems: 'center',
-    // justifyContent:'center',
+   
   },
   imageContainer: {
     height: 340,
@@ -67,15 +149,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   textContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+
     height: 26,
-    width: 169,
-    position: 'absolute',
-    top: 196,
-    left: 75,
+    minWidth: 169,
+
+    top: 75,
     alignItems: 'center',
   },
   text: {
     alignSelf: 'center',
     fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#38a69d',
+    width: '100%',
+    borderRadius: 4,
+    paddingVertical: 8,
+    marginTop: 14,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#FFF',
+    fontWeight: 'bold'
   }
 });
+
+

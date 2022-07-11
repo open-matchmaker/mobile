@@ -16,10 +16,14 @@ export type AppStackParamList = {
   Profile: {
     user: User
   }
+  Editor:{
+    user: User
+  }
 }
 
 export type HomeTabParamList = {
   Feed: undefined
   MyProfile: undefined
   Queue: undefined
+
 }

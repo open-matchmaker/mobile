@@ -3,4 +3,7 @@ export interface User {
   username: string;
   email: string;
   bio: string;
+  friendUserFriends: User[];
+  userFriends: User[];
+  playsGames: string[];
 }
