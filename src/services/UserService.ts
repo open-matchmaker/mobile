@@ -1,4 +1,4 @@
-import { User } from "../schemas/user";
+import { UpdateDto, User } from "../schemas/user";
 import {SignUpDto} from "../schemas/session"
 import api from "./api";
 
@@ -12,11 +12,11 @@ export default {
     return response
   },
   async sendFriendRequest(userId:number){
-    const response = await api.post('/invite',userId)
+    const response = await api.post('/user/invite',userId)
     return response
   },
   async acceptFriendRequest(userId:number){
-    const response = await api.post('/acceptInvite',userId)
+    const response = await api.post('/user/acceptInvite',userId)
     return response
   },
   async rejectFriendRequest(userId:number){
@@ -25,5 +25,9 @@ export default {
   async getFriends(){
     
     return null
+  },
+  async updateProfile(values: UpdateDto){
+    const response = await api.patch('/user/update',values)
+    return response
   }
 }

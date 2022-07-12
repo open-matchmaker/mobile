@@ -1,3 +1,4 @@
+import {Game} from './game';
 export interface User {
   id: number;
   username: string;
@@ -5,5 +6,8 @@ export interface User {
   bio: string;
   friendUserFriends: User[];
   userFriends: User[];
-  playsGames: string[];
+  playsGames: Game[];
+}
+export interface UpdateDto {
+  bio: string;
 }

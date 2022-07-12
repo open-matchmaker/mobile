@@ -99,7 +99,7 @@ export default function UserProfile({ user }: Props) {
             {user.username}
           </Text>
           <Text style={{ alignSelf: 'center' }}>
-            Bio: asldjaj{user.bio}
+            Bio: {user.bio}
           </Text>
             <Text style={styles.text}>
               Joga os jogos: {user.playsGames} X, Y E Z
