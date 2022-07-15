@@ -4,8 +4,8 @@ export interface User {
   username: string;
   email: string;
   bio: string;
-  friendUserFriends: User[];
-  userFriends: User[];
+  friendUserFriends: [];
+  userFriends: [];
   playsGames: Game[];
 }
 export interface UpdateDto {

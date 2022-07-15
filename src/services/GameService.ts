@@ -11,7 +11,11 @@ export default {
         return response;
     },
     async addGameToUser(gameId: any) {
-        const response = await api.post('/game/add', gameId);
+        const response = await api.patch('/game/add', gameId);
+        return response;
+    },
+    async getGameByName(name: string) {
+        const response = await api.get<Game[]>('/game/' + name);
         return response;
     }
 };

@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "react-native";
-import {CheckBox} from 'react-native-elements';
+import {CheckBox, Input} from 'react-native-elements';
 import useApp from "../../hooks/useApp";
 import UserService from "../../services/UserService";
 import * as Yup from 'yup'
@@ -12,11 +12,7 @@ interface Props {
     user: User;
   }
 
-export default function UserProfile({ user }: Props) {
-    const createGame = GameService.addGameToUser({id:1})
-   
-                            
-    
+export default function UserProfile({ user }: Props) {  
     const updateSchema = Yup.object().shape({
         bio: Yup.string().max(255, 'Bio não pode ter mais de 255 caracteres'),
         games: Yup.array(),
@@ -24,7 +20,7 @@ export default function UserProfile({ user }: Props) {
 
     const onSubmit = useCallback(async (values: UpdateDto, helpers: FormikHelpers<UpdateDto>) => {
 
-        lol ? GameService.addGameToUser(1): console.log(lol);
+       GameService.addGameToUser({id:1});
 
         try {    
         const response = await UserService.updateProfile(values)
@@ -34,14 +30,21 @@ export default function UserProfile({ user }: Props) {
         }
       }, []);
     
-    var [counterStrike, setChecked1] = useState(false);
-    var [lol, setChecked2] = useState(false);
-    var [overwatch, setChecked3] = useState(false);
-    var [fortnite, setChecked4] = useState(false);
-    var [apex, setChecked5] = useState(false);
-    var [valorant, setChecked6] = useState(false);
+    const[text, setText] = useState('');
 
-    console.log("user: ", user);
+    async function getGameSearch(text: string) {
+        const response = await GameService.getGameByName(text);
+        return response.data;
+    }
+
+    const onChangeText = useCallback((text: string) => {
+        let matches = [];
+        setText(text);
+        console.log(getGameSearch(text));
+    }
+    , []);
+
+   
     return(
         <View style={styles.container}>
             <Formik<UpdateDto>
@@ -59,32 +62,9 @@ export default function UserProfile({ user }: Props) {
               onBlur={handleBlur('bio')} />
             
             <View style={styles.games}>
-
                 <Text style={styles.text}>Jogos</Text>
-                <View style={styles.game}>
-                    <CheckBox checked={counterStrike} onPress={()=>setChecked1(!counterStrike)} />
-                    <Text> Counter Strike</Text>
-                </View>
-                <View style={styles.game}>
-                    <CheckBox checked={lol} onPress={()=>setChecked2(!lol)} />
-                    <Text> League of Legends</Text>
-                </View>
-                <View style={styles.game}>
-                    <CheckBox checked={overwatch} onPress={()=>setChecked3(!overwatch)} />
-                    <Text> Overwatch</Text>
-                </View>
-                <View style={styles.game}>
-                    <CheckBox checked={fortnite} onPress={()=>setChecked4(!fortnite)} />
-                    <Text> Fortnite</Text>
-                </View>
-                <View style={styles.game}>
-                    <CheckBox checked={apex} onPress={()=>setChecked5(!apex)} />
-                    <Text> Apex Legends</Text>
-                </View>
-                <View style={styles.game}>
-                    <CheckBox checked={valorant} onPress={()=>setChecked6(!valorant)} />
-                    <Text> Valorant</Text>
-                </View>
+                <TextInput onChangeText={onChangeText} placeholder="Digite o nome do jogo"/>
+                
             </View>
               
             <TouchableOpacity style={styles.button} onPress={()=>handleSubmit()}>

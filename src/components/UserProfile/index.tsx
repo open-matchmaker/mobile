@@ -27,9 +27,7 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
     );
   }
 
-  if(
-    requestSent && !requestReceived
-    ){
+  if(requestSent && !requestReceived){
     return (
       <View>
         <TouchableOpacity style={styles.button} disabled><Text style={styles.buttonText}>Solicitação enviada</Text></TouchableOpacity>
@@ -37,22 +35,26 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
     );
   }
 
-  if(
-    requestReceived && !requestSent
-    ){
+  if(requestReceived && !requestSent){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest(user.id)}><Text style={styles.buttonText}>Aceitar como amigo</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest({fromId: user.id})}><Text style={styles.buttonText}>Aceitar como amigo</Text></TouchableOpacity>
       </View>
     );
   }
 
-  if(
-    isMyFriend
-    ){
+  if(isMyFriend){
     return (
       <View>
         <TouchableOpacity style={styles.button} onPress={() => UserService.rejectFriendRequest(user.id)}><Text style={styles.buttonText}>Desfazer amizade</Text></TouchableOpacity>
+      </View>
+    );
+  }
+
+  if(!requestReceived && !requestSent && !isMyFriend){
+    return (
+      <View>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({toId:user.id})}><Text style={styles.buttonText}>Enviar solicitação</Text></TouchableOpacity>
       </View>
     );
   }
@@ -69,8 +71,8 @@ export default function UserProfile({ user }: Props) {
   let isMyFriend : boolean = false;
   try{
     
-    requestSent = me.userFriends.some((friend:User) => friend.id === profileOwner.id);
-    requestReceived = me.friendUserFriends.some((friend:User) => friend.id === profileOwner.id);
+    requestSent = me.userFriends.some((friendship) => friendship.friend_id === profileOwner.id);
+    requestReceived = me.friendUserFriends.some((friendship) => friendship.user_id === profileOwner.id);
 
     isMyFriend = requestSent && requestReceived;
   }
@@ -82,6 +84,14 @@ export default function UserProfile({ user }: Props) {
 
   }
   
+  function gamesNames(){
+    let games = "";
+    profileOwner.playsGames.forEach((game:any) => {
+      games += game.name + ", ";
+    }
+    );
+    return games;
+  }
 
   return (
     <View style={styles.container}>
@@ -102,7 +112,7 @@ export default function UserProfile({ user }: Props) {
             Bio: {user.bio}
           </Text>
             <Text style={styles.text}>
-              Joga os jogos: {user.playsGames} X, Y E Z
+              Joga os jogos: {gamesNames()}
             </Text>
             <Text style={styles.text}>
             seguindo: xxx 

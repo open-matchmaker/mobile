@@ -11,11 +11,11 @@ export default {
     const response = await api.post('/user',values)
     return response
   },
-  async sendFriendRequest(userId:number){
+  async sendFriendRequest(userId:any){
     const response = await api.post('/user/invite',userId)
     return response
   },
-  async acceptFriendRequest(userId:number){
+  async acceptFriendRequest(userId:any){
     const response = await api.post('/user/acceptInvite',userId)
     return response
   },
@@ -29,5 +29,9 @@ export default {
   async updateProfile(values: UpdateDto){
     const response = await api.patch('/user/update',values)
     return response
+  },
+  async getUserById(id:number){
+    const response = await api.get<User>('/user/findID/'+id)
+    return response.data
   }
 }
