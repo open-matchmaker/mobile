@@ -22,7 +22,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(isMe){
     return(
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.push('App', { screen: 'Editor', params: { user: user } })}><Text style={styles.buttonText}>Editar Perfil</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.push('App', { screen: 'Editor', params: { user: user } })}>
+          <Text style={styles.buttonText}>Editar Perfil</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -30,7 +32,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(requestSent && !requestReceived){
     return (
       <View>
-        <TouchableOpacity style={styles.button} disabled><Text style={styles.buttonText}>Solicitação enviada</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} disabled>
+          <Text style={styles.buttonText}>Solicitação enviada</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -38,7 +42,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(requestReceived && !requestSent){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest({fromId: user.id})}><Text style={styles.buttonText}>Aceitar como amigo</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest({fromId: user.id})}>
+          <Text style={styles.buttonText}>Aceitar como amigo</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -46,7 +52,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(isMyFriend){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.rejectFriendRequest(user.id)}><Text style={styles.buttonText}>Desfazer amizade</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.rejectFriendRequest(user.id)}>
+          <Text style={styles.buttonText}>Desfazer amizade</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -54,7 +62,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(!requestReceived && !requestSent && !isMyFriend){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({toId:user.id})}><Text style={styles.buttonText}>Enviar solicitação</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({toId:user.id})}>
+          <Text style={styles.buttonText}>Enviar solicitação</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -93,6 +103,15 @@ export default function UserProfile({ user }: Props) {
     return games;
   }
 
+  function friendCounter(){
+    let counter = 0;
+    profileOwner.userFriends.forEach((friendship:any) => {
+      if(friendship.status) counter++;
+    }
+    );
+    return counter;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -115,7 +134,7 @@ export default function UserProfile({ user }: Props) {
               Joga os jogos: {gamesNames()}
             </Text>
             <Text style={styles.text}>
-            seguindo: xxx 
+            Amigos: {friendCounter()}
             </Text>
           {generateFriendButton(requestSent, requestReceived, isMyFriend, isMe, user)}
         </View>
@@ -182,8 +201,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttonText: {
-    fontSize: 18,
     color: '#FFF',
+    fontSize: 18,
     fontWeight: 'bold'
   }
 });
