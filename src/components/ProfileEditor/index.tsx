@@ -12,15 +12,30 @@ interface Props {
     user: User;
   }
 
+function addGame(gameId:number){
+  console.log("add game", gameId);
+  try {
+    GameService.addGameToUser({id : gameId});
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function removeGame(gameId:number){
+    console.log("remove game", gameId);
+    try {
+        GameService.removeGameFromUser({id : gameId});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export default function UserProfile({ user }: Props) {  
     const updateSchema = Yup.object().shape({
-        bio: Yup.string().max(255, 'Bio não pode ter mais de 255 caracteres'),
-        games: Yup.array(),
+        bio: Yup.string().max(255, 'Bio não pode ter mais de 255 caracteres')
     });
 
     const onSubmit = useCallback(async (values: UpdateDto, helpers: FormikHelpers<UpdateDto>) => {
-
-       GameService.addGameToUser({id:1});
 
         try {    
         const response = await UserService.updateProfile(values)
@@ -31,16 +46,18 @@ export default function UserProfile({ user }: Props) {
       }, []);
     
     const[text, setText] = useState('');
+    const[suggestions, setSuggestions] = useState([]);
 
     async function getGameSearch(text: string) {
         const response = await GameService.getGameByName(text);
+        text.length > 0 ? setSuggestions(response.data) : setSuggestions([]);
         return response.data;
     }
 
     const onChangeText = useCallback((text: string) => {
-        let matches = [];
+        let matches;
         setText(text);
-        console.log(getGameSearch(text));
+        getGameSearch(text);
     }
     , []);
 
@@ -64,7 +81,13 @@ export default function UserProfile({ user }: Props) {
             <View style={styles.games}>
                 <Text style={styles.text}>Jogos</Text>
                 <TextInput onChangeText={onChangeText} placeholder="Digite o nome do jogo"/>
+                {suggestions && suggestions.map((game, i) => 
                 
+                <View key={i} style={styles.game}>
+                <Text 
+                onPress={()=>{user.playsGames.some((games) => games.id === game.id) ? removeGame(game.id) : addGame(game.id) }}
+                >{game.name}</Text>
+                </View>)}
             </View>
               
             <TouchableOpacity style={styles.button} onPress={()=>handleSubmit()}>

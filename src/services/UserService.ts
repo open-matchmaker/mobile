@@ -16,11 +16,16 @@ export default {
     return response
   },
   async acceptFriendRequest(userId:any){
-    const response = await api.post('/user/acceptInvite',userId)
+    const response = await api.post('/user/acceptinvite',userId)
     return response
   },
-  async rejectFriendRequest(userId:number){
-    return null
+  async rejectFriendRequest(userId:any){
+    const response = await api.post('/user/rejectinvite',userId)
+    return response
+  },
+  async removeFriend(userId:any){
+    const response = await api.post('/user/deletefriend',userId)
+    return response
   },
   async getFriends(){
     

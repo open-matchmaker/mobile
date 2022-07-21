@@ -19,6 +19,7 @@ function addFriend(){
 
 function generateFriendButton( requestSent:boolean, requestReceived:boolean, isMyFriend:boolean, isMe:boolean, user:User) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const me = useApp().account;
   if(isMe){
     return(
       <View>
@@ -42,8 +43,11 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(requestReceived && !requestSent){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest({fromId: user.id})}>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest({fromId: user.id, toId:me.id})}>
           <Text style={styles.buttonText}>Aceitar como amigo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.rejectFriendRequest({fromId: user.id, toId:me.id})}>
+          <Text style={styles.buttonText}>Rejeitar solicitação</Text>
         </TouchableOpacity>
       </View>
     );
@@ -52,7 +56,7 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(isMyFriend){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.rejectFriendRequest(user.id)}>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
           <Text style={styles.buttonText}>Desfazer amizade</Text>
         </TouchableOpacity>
       </View>
@@ -62,7 +66,7 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(!requestReceived && !requestSent && !isMyFriend){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({toId:user.id})}>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({fromId:me.id, toId:user.id})}>
           <Text style={styles.buttonText}>Enviar solicitação</Text>
         </TouchableOpacity>
       </View>
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
    
   },
   imageContainer: {
-    height: 340,
+    height: 420,
     width: 320,
     backgroundColor: 'white',
     borderRadius: 21,
@@ -204,7 +208,16 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold'
-  }
+  },
+  buttonReject: {
+    backgroundColor: '#FF0000',
+    width: '100%',
+    borderRadius: 4,
+    paddingVertical: 8,
+    marginTop: 14,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 });
 
 

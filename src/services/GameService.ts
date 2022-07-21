@@ -14,8 +14,12 @@ export default {
         const response = await api.patch('/game/add', gameId);
         return response;
     },
+    async removeGameFromUser(gameId: any) {
+        const response = await api.patch('/game/delete', gameId);
+        return response;
+    },
     async getGameByName(name: string) {
-        const response = await api.get<Game[]>('/game/' + name);
+        const response = await api.get<Game[]>('/game/game?name=' + name);
         return response;
     }
 };
