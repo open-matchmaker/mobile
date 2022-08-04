@@ -7,6 +7,9 @@ import * as Yup from 'yup'
 import { Formik, FormikHelpers } from 'formik';
 import { User, UpdateDto } from "../../schemas/user";
 import GameService from "../../services/GameService";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../@types/routes";
+import { useNavigation } from "@react-navigation/native";
 
 interface Props {
     user: User;
@@ -61,6 +64,8 @@ export default function UserProfile({ user }: Props) {
     }
     , []);
 
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
    
     return(
         <View style={styles.container}>
@@ -85,7 +90,7 @@ export default function UserProfile({ user }: Props) {
                 
                 <View key={i} style={styles.game}>
                 <Text 
-                onPress={()=>{user.playsGames.some((games) => games.id === game.id) ? removeGame(game.id) : addGame(game.id) }}
+                onPress={()=>{navigation.push('App', { screen: 'GameScreen', params: { game: game } })}}
                 >{game.name}</Text>
                 </View>)}
             </View>
