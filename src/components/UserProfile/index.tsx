@@ -36,7 +36,11 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.button} disabled>
           <Text style={styles.buttonText}>Solicitação enviada</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.button} onPress={() => UserService.reportUser(user.id,{description: "oi", reportMotive: JSON.parse('{"Motivo":"Teste"}')})}></TouchableOpacity>
+        </View>
       </View>
+  
     );
   }
 
@@ -49,6 +53,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.rejectFriendRequest({fromId: user.id, toId:me.id})}>
           <Text style={styles.buttonText}>Rejeitar solicitação</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.button} onPress={() => UserService.reportUser(user.id,{description: "oi", reportMotive: JSON.parse('{"Motivo":"Teste"}')})}></TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -59,6 +66,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.button} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
           <Text style={styles.buttonText}>Desfazer amizade</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.button} onPress={() => UserService.reportUser(user.id,{description: "oi", reportMotive: JSON.parse('{"Motivo":"Teste"}')})}></TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -69,6 +79,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({fromId:me.id, toId:user.id})}>
           <Text style={styles.buttonText}>Enviar solicitação</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.button} onPress={() => UserService.reportUser(user.id,{description: "oi", reportMotive: JSON.parse('{"Motivo":"Teste"}')})}></TouchableOpacity>
+        </View>
       </View>
     );
   }

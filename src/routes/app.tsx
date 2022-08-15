@@ -8,6 +8,8 @@ import Post from '../screens/Post';
 import Profile from '../screens/Profile';
 import Editor from '../screens/Editor';
 import GameScreen from '../screens/GameScreen';
+import ReportScreen from '../screens/ReportScreen';
+
 import React from 'react';
 
 const { Navigator, Screen } = createNativeStackNavigator<AppStackParamList>();
@@ -21,6 +23,7 @@ export default function Routes() {
         <Screen name="Profile" component={Profile} />
         <Screen name="Editor" component={Editor} />
         <Screen name="GameScreen" component={GameScreen} />
+        <Screen name="ReportScreen" component={ReportScreen} />
       </Navigator>
     </AppContextProvider>
   )
