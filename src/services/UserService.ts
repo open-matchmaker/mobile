@@ -39,9 +39,5 @@ export default {
   async getUserById(id:number){
     const response = await api.get<User>('/user/findID/'+id)
     return response.data
-  },
-  async reportUser(userId:number, reason:Report){
-    const response = await api.post('/report/'+userId,reason)
-    return response
   }
 }

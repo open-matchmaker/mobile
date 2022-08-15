@@ -23,7 +23,7 @@ export default function Routes() {
         <Screen name="Profile" component={Profile} />
         <Screen name="Editor" component={Editor} />
         <Screen name="GameScreen" component={GameScreen} />
-        <Screen name="ReportScreen" component={ReportScreen} />
+        <Screen name="ReportScreen" component={ReportScreen} options={{ headerShown: false }} />
       </Navigator>
     </AppContextProvider>
   )
