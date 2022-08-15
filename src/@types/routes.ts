@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
+import { Game } from "../schemas/game";
 import { User } from "../schemas/user";
 
 export type RootStackParamList = {
@@ -18,6 +19,9 @@ export type AppStackParamList = {
   }
   Editor:{
     user: User
+  }
+  GameScreen:{
+    game: Game
   }
 }
 

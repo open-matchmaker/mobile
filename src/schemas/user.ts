@@ -1,9 +1,13 @@
+import {Game} from './game';
 export interface User {
   id: number;
   username: string;
   email: string;
   bio: string;
-  friendUserFriends: User[];
-  userFriends: User[];
-  playsGames: string[];
+  friendUserFriends: [];
+  userFriends: [];
+  playsGames: Game[];
+}
+export interface UpdateDto {
+  bio: string;
 }
