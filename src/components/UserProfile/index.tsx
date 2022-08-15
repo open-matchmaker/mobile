@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#38a69d',
     width: '100%',
+    minHeight: 50,
     borderRadius: 4,
     paddingVertical: 8,
     marginTop: 14,
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold'
   },
   buttonReject: {
