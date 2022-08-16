@@ -23,6 +23,9 @@ export type AppStackParamList = {
   GameScreen:{
     game: Game
   }
+  ReportScreen:{
+    user: User
+  }
 }
 
 export type HomeTabParamList = {

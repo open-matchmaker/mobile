@@ -1,6 +1,7 @@
 import { UpdateDto, User } from "../schemas/user";
 import {SignUpDto} from "../schemas/session"
 import api from "./api";
+import { Report } from "../schemas/report";
 
 export default {
   async whoami() {

@@ -36,7 +36,13 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.button} disabled>
           <Text style={styles.buttonText}>Solicitação enviada</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+  
     );
   }
 
@@ -49,6 +55,11 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.rejectFriendRequest({fromId: user.id, toId:me.id})}>
           <Text style={styles.buttonText}>Rejeitar solicitação</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -59,6 +70,11 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.button} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
           <Text style={styles.buttonText}>Desfazer amizade</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -69,12 +85,20 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
         <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({fromId:me.id, toId:user.id})}>
           <Text style={styles.buttonText}>Enviar solicitação</Text>
         </TouchableOpacity>
+        <View>
+          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 
 }
 
+function report(user:User, navigation:NativeStackNavigationProp<RootStackParamList>){
+  navigation.push('App', { screen: 'ReportScreen', params: { user: user } });
+}
 
 export default function UserProfile({ user }: Props) {
   const profileOwner = user;
@@ -198,6 +222,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#38a69d',
     width: '100%',
+    minHeight: 50,
     borderRadius: 4,
     paddingVertical: 8,
     marginTop: 14,
@@ -206,7 +231,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold'
   },
   buttonReject: {
