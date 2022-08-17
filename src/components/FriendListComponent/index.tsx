@@ -1,11 +1,11 @@
 import { NativeStackScreenProps, NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useCallback, useState, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { AppStackParamList, RootStackParamList } from "../../@types/routes";
 import { User } from "../../schemas/user";
 import { useNavigation } from "@react-navigation/native";
 import UserService from "../../services/UserService";
-import Spacer from 'react-native-spacer';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
   user: User;
@@ -14,7 +14,7 @@ interface Props {
 
 export default function FriendListComponent({ user }: Props ) {
   
-  const myFriends = user.userFriends.filter(friend => friend.status === false);
+  const myFriends = user.userFriends.filter(friend => friend.status === true);
 
   useEffect(() => {
     userSearch(myFriends)
@@ -46,23 +46,22 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
 return(
 
   <View style={ styles.container }>
+    <ScrollView>
       {lista && lista.map((user, i) => 
-                    
-        <View key={i} style={ styles.friendsButton }>
-          <View>
-            <Text 
-              onPress={()=>{navigation.push('App', { screen: 'Profile', params: { user: user } })}}
-              >{user.username}</Text>
+        <TouchableOpacity key={i} style={ styles.friendsButton } onPress={()=>{navigation.push('App', { screen: 'Profile', params: { user: user } })}}>
+          <View style={ styles.friendsButtonContent }>
+            <Text style={ styles.text }>{user.username}</Text>
           </View>
-      </View>)}
-    </View>
+        </TouchableOpacity>)}
+    </ScrollView>
+  </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#142230',
+    backgroundColor: '#FFF',
     padding: 10,
   },
   friendsButton : {
@@ -71,21 +70,17 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     paddingHorizontal: 15,
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
   friendsButtonContent : {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+
     alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  image: {
-    height: 40,
-    width: 40,
-    borderRadius: 50,
   },
   text : {
-    color: '#000000',
+    color: '#FFF',
     fontSize: 20,
     fontWeight: 'bold',
     margin: 8,
