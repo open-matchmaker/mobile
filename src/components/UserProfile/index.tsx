@@ -140,6 +140,8 @@ export default function UserProfile({ user }: Props) {
     return counter;
   }
 
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -161,8 +163,8 @@ export default function UserProfile({ user }: Props) {
             <Text style={styles.text}>
               Joga os jogos: {gamesNames()}
             </Text>
-            <Text style={styles.text}>
-            Amigos: {friendCounter()}
+            <Text style={styles.text} onPress={() => navigation.push('App', { screen: 'FriendList', params: { user: user } })}>
+              Amigos: {friendCounter()} 
             </Text>
           {generateFriendButton(requestSent, requestReceived, isMyFriend, isMe, user)}
         </View>
