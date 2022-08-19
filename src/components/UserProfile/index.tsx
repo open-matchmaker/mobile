@@ -67,7 +67,7 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(isMyFriend){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
+        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
           <Text style={styles.buttonText}>Desfazer amizade</Text>
         </TouchableOpacity>
         <View>

@@ -1,11 +1,10 @@
 import { NativeStackScreenProps, NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useCallback, useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { AppStackParamList, RootStackParamList } from "../../@types/routes";
 import { User } from "../../schemas/user";
 import { useNavigation } from "@react-navigation/native";
 import UserService from "../../services/UserService";
-import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
   user: User;
@@ -20,12 +19,6 @@ export default function FriendListComponent({ user }: Props ) {
     userSearch(myFriends)
   }, []);
   
-  async function friendsNames() {
-    return (
-      myFriends.map(async friend => await UserService.getUserById(friend.id))
-    );
-  }
-
   let users = [];
 
   const [lista, setLista] = useState([])
@@ -46,14 +39,24 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
 return(
 
   <View style={ styles.container }>
-    <ScrollView>
+    <View>
       {lista && lista.map((user, i) => 
         <TouchableOpacity key={i} style={ styles.friendsButton } onPress={()=>{navigation.push('App', { screen: 'Profile', params: { user: user } })}}>
+
           <View style={ styles.friendsButtonContent }>
+          <View style={styles.avatarContainer}>
+            <View>
+              <Image style={styles.avatar} source={require('../../assets/img/user.jpg')} />
+            </View>
+          </View>
+          <View style={styles.friendsButtonText}>
             <Text style={ styles.text }>{user.username}</Text>
+            <Text style={ styles.bottomText }>{user.email}</Text>
+            <Text style={ styles.bottomText }>{user.bio}</Text>
+          </View>
           </View>
         </TouchableOpacity>)}
-    </ScrollView>
+    </View>
   </View>
   );
 }
@@ -66,23 +69,47 @@ const styles = StyleSheet.create({
   },
   friendsButton : {
     flex: 1,
-    backgroundColor: '#38AFAF',
+    backgroundColor: '#DDD',
     width: '100%',
-    height: 50,
-    paddingHorizontal: 15,
-    justifyContent: 'space-between',
+    maxHeight: 60,
+    minHeight: 60,
     marginBottom: 10,
+    borderRadius: 10,
+    elevation: 5,
   },
   friendsButtonContent : {
     flex: 1,
     flexDirection: 'row',
-
-    alignItems: 'center',
+    width: '100%',
+  },
+  avatar: {
+    height: 60,
+    width: 60,
+    backgroundColor: 'black',
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderColor: '#38a69d',
+    borderWidth: 1,
+  },
+  avatarContainer: {
+    height: '100%',
+  
+    alignSelf: 'center',
   },
   text : {
-    color: '#FFF',
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
-    margin: 8,
+    
+  },
+  bottomText : {
+    fontSize: 12,
+    
+  },
+  friendsButtonText : {
+    flex: 1,
+    flexDirection: 'column',
+    width: '85%',
+    justifyContent: 'flex-start',
+    paddingLeft: 10,
   },
 });
