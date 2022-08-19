@@ -14,7 +14,7 @@ export default function MyProfile() {
   const [isLoading, setLoading] = useState(true);
 
   const getUser = async () => {
-      UserService.getUserById(12).then((response) => {
+      UserService.getUserById(14).then((response) => {
       setUser(response);
       setLoading(false);
     });

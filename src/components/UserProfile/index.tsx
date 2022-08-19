@@ -67,7 +67,7 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(isMyFriend){
     return (
       <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
+        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
           <Text style={styles.buttonText}>Desfazer amizade</Text>
         </TouchableOpacity>
         <View>
@@ -140,6 +140,8 @@ export default function UserProfile({ user }: Props) {
     return counter;
   }
 
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -161,8 +163,8 @@ export default function UserProfile({ user }: Props) {
             <Text style={styles.text}>
               Joga os jogos: {gamesNames()}
             </Text>
-            <Text style={styles.text}>
-            Amigos: {friendCounter()}
+            <Text style={styles.text} onPress={() => navigation.push('App', { screen: 'FriendList', params: { user: user } })}>
+              Amigos: {friendCounter()} 
             </Text>
           {generateFriendButton(requestSent, requestReceived, isMyFriend, isMe, user)}
         </View>

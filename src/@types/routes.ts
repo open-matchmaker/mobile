@@ -26,6 +26,9 @@ export type AppStackParamList = {
   ReportScreen:{
     user: User
   }
+  FriendList:{
+    user: User
+  }
 }
 
 export type HomeTabParamList = {
