@@ -36,6 +36,7 @@
     "react-native-spacer": "^1.7.0",
     "react-native-svg": "12.3.0",
     "react-native-web": "0.17.7",
+    "socket.io-client": "^4.5.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {

@@ -26,6 +26,6 @@ export default function MyProfile() {
     return (<Text>carregando</Text>);
   } else {
   return (
-    <UserProfile user={user} />
+    <UserProfile user={account} />
   );
 }}
