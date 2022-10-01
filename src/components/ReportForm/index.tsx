@@ -6,6 +6,9 @@ import { User } from "../../schemas/user";
 import { TextInput } from "react-native-paper";
 import ReportService from "../../services/ReportService";
 import { Report } from "../../schemas/report";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../@types/routes";
 
 interface Props {
     user: User;
@@ -89,6 +92,7 @@ export default function ReportForm({ user }: Props) {
         }
         await ReportService.reportUser(user.id, report);
         
+        alert("Usuário denunciado com sucesso!")
 
     }
 }
