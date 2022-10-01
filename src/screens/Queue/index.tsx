@@ -27,8 +27,8 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
   async function joinQueue(id){
     const player = await UserService.getUserById(id)
 
-    socket.emit('joinRoom', {username: player.username, room: 'League Of Legends', numberPlayers:1});
-    socket.on('League Of Legends1', (message) => console.log(message))
+    socket.emit('joinRoom', {username: player.username, room: 'League Of Legends', numberPlayers:2});
+    socket.on('League Of Legends2', (message) => console.log(message))
 
     // await queueService.joinQueue(id).then((response) => {
     //   console.log(response);
