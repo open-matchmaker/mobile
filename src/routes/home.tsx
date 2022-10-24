@@ -6,6 +6,7 @@ import { HomeTabParamList } from '../@types/routes';
 import Feed from '../screens/Feed';
 import MyProfile from '../screens/MyProfile';
 import Queue from '../screens/Queue';
+import GameList from '../screens/GameList';
 
 const { Navigator, Screen } = createBottomTabNavigator<HomeTabParamList>();
 
@@ -52,6 +53,22 @@ export default function Home() {
           )
         }}
       />
+      <Screen 
+        name="Games"
+        component={GameList}
+        options={{
+          headerShown: false,
+          title: "Jogos",
+          tabBarIcon: ({ focused, color, size }) => (
+            <FontAwesome
+              name='gamepad'
+              size={size}
+              color={color}
+            />
+          )
+        }}
+      >
+      </Screen>
     </Navigator>
   )
 }
