@@ -147,7 +147,7 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
           </View>
           </View>
         </TouchableOpacity>)}
-    </View>
+      </View>
     </View>
   );
 
