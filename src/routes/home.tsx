@@ -3,13 +3,20 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import { HomeTabParamList } from '../@types/routes';
 
+import { User } from "../schemas/user";
+
 import Feed from '../screens/Feed';
 import MyProfile from '../screens/MyProfile';
 import Queue from '../screens/Queue';
+import UserSearch from '../screens/UserSearch';	
+
+interface Props {
+  user: User;
+}
 
 const { Navigator, Screen } = createBottomTabNavigator<HomeTabParamList>();
 
-export default function Home() {
+export default function Home( { user }: Props ) {
   return (
     
     <Navigator initialRouteName='Feed'>
@@ -20,6 +27,16 @@ export default function Home() {
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (
             <FontAwesome name="home" size={size} color={color} />
+          )
+        }}
+      />
+      <Screen
+        name="Pesquisa"
+        component={UserSearch}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <FontAwesome name="search" size={size} color={color} />
           )
         }}
       />
