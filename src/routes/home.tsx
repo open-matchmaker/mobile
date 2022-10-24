@@ -86,22 +86,6 @@ export default function Home( { user }: Props ) {
         }}
       >
       </Screen>
-      <Screen
-        name="UserSearch"
-        component={UserSearch}
-        options={{
-          headerShown: false,
-          title: "Usuários",
-          tabBarIcon: ({ focused, color, size }) => (
-            <FontAwesome
-              name='users'
-              size={size}
-              color={color}
-            />
-          )
-        }}
-      >
-      </Screen>
     </Navigator>
   )
 }
