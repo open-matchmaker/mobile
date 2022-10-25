@@ -35,5 +35,6 @@ export type HomeTabParamList = {
   Feed: undefined
   MyProfile: undefined
   Queue: undefined
+  GameList: undefined
 
 }

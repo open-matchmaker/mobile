@@ -8,6 +8,7 @@ import { User } from "../schemas/user";
 import Feed from '../screens/Feed';
 import MyProfile from '../screens/MyProfile';
 import Queue from '../screens/Queue';
+import GameList from '../screens/GameList';
 import UserSearch from '../screens/UserSearch';	
 
 interface Props {
@@ -69,6 +70,22 @@ export default function Home( { user }: Props ) {
           )
         }}
       />
+      <Screen 
+        name="Games"
+        component={GameList}
+        options={{
+          headerShown: false,
+          title: "Jogos",
+          tabBarIcon: ({ focused, color, size }) => (
+            <FontAwesome
+              name='gamepad'
+              size={size}
+              color={color}
+            />
+          )
+        }}
+      >
+      </Screen>
     </Navigator>
   )
 }

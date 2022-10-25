@@ -14,10 +14,10 @@ import { useNavigation } from "@react-navigation/native";
 import { io } from "socket.io-client";
 
 const queueService = new QueueService();
+const socket = io('https://queuepds.herokuapp.com/')
 
 
 export default function Queue({ route }: NativeStackScreenProps<AppStackParamList, 'Queue'>) {
-  const socket = io('https://queuepds.herokuapp.com/')
   
   socket.on('message', (message) => {
     console.log(message);
@@ -28,7 +28,15 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
     const player = await UserService.getUserById(id)
 
     socket.emit('joinRoom', {username: player.username, room: 'League Of Legends', numberPlayers:2});
-    socket.on('League Of Legends2', (message) => console.log(message))
+    socket.on('League Of Legends2', (message) => {
+      console.log(message.queue)
+      let players = []
+      message.queue.forEach(element => { 
+        players.push(UserService.getUserById(element.playerName))
+        
+      });
+      setPlayers(players)
+      console.log(message)})
 
     // await queueService.joinQueue(id).then((response) => {
     //   console.log(response);
@@ -62,7 +70,7 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
         {label: 'Squads', value: 'squads'}
     ]);
 
-    const [players, setPlayers] = useState([]);
+    const [players, setPlayers] = useState([account, account, account, account]);
 
     
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
