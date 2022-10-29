@@ -26,13 +26,16 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
   const [userInQueue, setUserInQueue] = useState(false);
   async function joinQueue(id){
     const player = await UserService.getUserById(id)
-
-    socket.emit('joinRoom', {username: player.username, room: 'League Of Legends', numberPlayers:2});
-    socket.on('League Of Legends2', (message) => {
+    console.log(itemsGame[0].value, itemsMode);
+    
+    socket.emit('joinRoom', {username: String(player.id), room: itemsGame[0].value, numberPlayers: itemsMode[0].value });
+    let roomGame = itemsGame[0].value+String(itemsMode[0].value)
+    socket.on(roomGame, (message) => {
+      alert('Partida encontrada')
       console.log(message.queue)
       let players = []
       message.queue.forEach(element => { 
-        players.push(UserService.getUserById(element.playerName))
+        players.push(UserService.getUserById(Number(element.playerName)))
         
       });
       setPlayers(players)
@@ -42,32 +45,27 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
     //   console.log(response);
       setUserInQueue(true);
     //   setPlayers([account])
-      alert('Partida encontrada')
   
   }
 
 
   async function leaveQueue(id:any){
-    await queueService.leaveQueue(id).then((response) => {
-      console.log(response);
-      setUserInQueue(response);
-      setPlayers([])
-    }
-    );
+    socket.emit('quitQueue', {room:itemsGame[0].value  ,numberPlayers:itemsMode[0].value , username: String(id)})
+    alert('user disconected')
   }
     const { account } = useApp();
     const [openGame, setOpenGame] = useState(false);
     const [valueGame, setValueGame] = useState(null);
     const [itemsGame, setItemsGame] = useState([
-      {label: 'League of Legends', value: 'lol'},
+      {label: 'League of Legends', value: 'LeagueOfLegends'},
       {label: 'Valorant', value: 'valorant'}
     ]);
 
     const [openMode, setOpenMode] = useState(false);
     const [valueMode, setValueMode] = useState(null);
     const [itemsMode, setItemsMode] = useState([
-        {label: 'Duos', value: 'duos'},
-        {label: 'Squads', value: 'squads'}
+        {label: 'Duos', value: 2},
+        {label: 'Squads', value: 4}
     ]);
 
     const [players, setPlayers] = useState([account, account, account, account]);
