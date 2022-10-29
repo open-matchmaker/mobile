@@ -39,5 +39,9 @@ export default {
   async getUserById(id:number){
     const response = await api.get<User>('/user/findID/'+id)
     return response.data
-  }
+  },
+  async getAllUsers() {
+    const response = await api.get<User[]>('/user/');
+    return response.data;
+},
 }
