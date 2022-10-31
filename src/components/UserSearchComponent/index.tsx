@@ -16,7 +16,7 @@ export default function UserSearchComponent({ user }: Props ) {
   const allUsers = user.userFriends;
 
   useEffect(() => {
-    userSearch(allUsers)
+    userSearch(allUsers, input)
   }, []);
   
   let users = [];
@@ -26,7 +26,7 @@ export default function UserSearchComponent({ user }: Props ) {
 
   console.log(input)
 
-  async function userSearch( allUsers : any ) {
+  async function userSearch( allUsers : any, input : any) {
 
   const everything = await UserService.getAllUsers();
 
@@ -45,12 +45,8 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
 
 return (
   <View style={ styles.container }>
-    <TextInput style={ styles.input } onChangeText={(text) => setInput(text.toLowerCase())} 
-    placeholder="Search"
-    onSubmitEditing={(text) => {
-      userSearch(allUsers)
-    }}
-    />
+    <TextInput style={ styles.input } onChangeText={(text) => userSearch(allUsers, text.toLowerCase())} 
+    placeholder="Search"/>
     <ScrollView>
     {lista && lista.map((user, i) => 
       <TouchableOpacity key={i} style={ styles.friendsButton } onPress={()=>{navigation.push('App', { screen: 'Profile', params: { user: user } })}}>
