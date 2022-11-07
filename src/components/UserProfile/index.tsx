@@ -22,9 +22,9 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   const me = useApp().account;
   if(isMe){
     return(
-      <View>
+      <View style={ styles.buttonContainer }>
         <TouchableOpacity style={styles.button} onPress={() => navigation.push('App', { screen: 'Editor', params: { user: user } })}>
-          <Text style={styles.buttonText}>Editar Perfil</Text>
+          <Text style={styles.buttonText}>Editar perfil</Text>
         </TouchableOpacity>
       </View>
     );
@@ -32,13 +32,13 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
 
   if(requestSent && !requestReceived){
     return (
-      <View>
+      <View style={ styles.buttonAlreadySearchedContainer}>
         <TouchableOpacity style={styles.button} disabled>
-          <Text style={styles.buttonText}>Solicitação enviada</Text>
+          <Text style={styles.buttonSearchText}>Solicitação enviada</Text>
         </TouchableOpacity>
         <View>
-          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
-            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          <TouchableOpacity style={styles.buttonReportSend} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonReportText}>Denunciar usuário</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -48,16 +48,16 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
 
   if(requestReceived && !requestSent){
     return (
-      <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.acceptFriendRequest({fromId: user.id, toId:me.id})}>
-          <Text style={styles.buttonText}>Aceitar como amigo</Text>
+      <View style={ styles.buttonSolicitationContainer }>
+        <TouchableOpacity style={styles.buttonSolicitation} onPress={() => UserService.acceptFriendRequest({user_id: user.id, friend_Id:me.id})}>
+          <Text style={styles.buttonSolicitationText}>Aceitar como amigo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.rejectFriendRequest({fromId: user.id, toId:me.id})}>
-          <Text style={styles.buttonText}>Rejeitar solicitação</Text>
+        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.rejectFriendRequest({user_id: user.id, friend_Id:me.id})}>
+          <Text style={styles.buttonRejectText}>Rejeitar solicitação</Text>
         </TouchableOpacity>
         <View>
-          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
-            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          <TouchableOpacity style={styles.buttonReportAccept} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonReportText}>Denunciar usuário</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -66,13 +66,13 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
 
   if(isMyFriend){
     return (
-      <View>
-        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id })}>
-          <Text style={styles.buttonText}>Desfazer amizade</Text>
+      <View style={ styles.buttonSolicitationContainer }>
+        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.removeFriend({user_id: me.id, friend_Id:user.id })}>
+          <Text style={styles.buttonRejectText}>Desfazer amizade</Text>
         </TouchableOpacity>
         <View>
-          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
-            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          <TouchableOpacity style={styles.buttonReportRemove} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonReportText}>Denunciar usuário</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -81,13 +81,13 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
 
   if(!requestReceived && !requestSent && !isMyFriend){
     return (
-      <View>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({fromId:me.id, toId:user.id})}>
-          <Text style={styles.buttonText}>Enviar solicitação</Text>
+      <View style={ styles.buttonSearchedContainer }>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({user_id:me.id, friend_Id:user.id})}>
+          <Text style={styles.buttonSearchText}>Enviar solicitação</Text>
         </TouchableOpacity>
         <View>
-          <TouchableOpacity style={styles.buttonReject} onPress={() => report(user,navigation)}>
-            <Text style={styles.buttonText}>Denunciar usuário</Text>
+          <TouchableOpacity style={styles.buttonReportSearch} onPress={() => report(user,navigation)}>
+            <Text style={styles.buttonReportText}>Denunciar usuário</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -144,30 +144,38 @@ export default function UserProfile({ user }: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
+      <View style={ styles.infoContainer }>
         <View>
-          <Image style={styles.image} source={(require('../../assets/img/bg.jpg'))} />
+          <Image style={styles.backgroundImage} source={(require('../../assets/img/bg.jpg'))} />
         </View>
-        <View style={styles.avatarContainer}>
-          <View>
-            <Image style={styles.avatar} source={require('../../assets/img/user.jpg')} />
-          </View>
+        <View style={ styles.profileImageContainer }>
+          <Image style={styles.profileImage} source={require('../../assets/img/user.jpg')} />
         </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>
+        <View style={ styles.nameContainer }>
+          <Text style={styles.nameText}>
             {user.username}
           </Text>
-          <Text style={{ alignSelf: 'center' }}>
-            Bio: {user.bio}
-          </Text>
-            <Text style={styles.text}>
-              Joga os jogos: {gamesNames()}
-            </Text>
-            <Text style={styles.text} onPress={() => navigation.push('App', { screen: 'FriendList', params: { user: user } })}>
-              Amigos: {friendCounter()} 
-            </Text>
-          {generateFriendButton(requestSent, requestReceived, isMyFriend, isMe, user)}
         </View>
+
+        <View style={ styles.bioContainer }>
+          <Text>
+            {user.bio}
+          </Text>
+          
+        </View>
+        
+        <View style={ styles.gamesContainer }>
+          <Text>
+            {gamesNames()}
+          </Text>
+        </View>
+
+        <View style={styles.friendsContainer}>
+          <Text onPress={() => navigation.push('App', { screen: 'FriendList', params: { user: user } })}>
+            <Text style={ styles.boldText }>{friendCounter()} Amigos</Text>
+          </Text>
+        </View>
+        {generateFriendButton(requestSent, requestReceived, isMyFriend, isMe, user)}
       </View>
     </View>
   );
@@ -176,74 +184,208 @@ export default function UserProfile({ user }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#38a69d',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
-   
   },
-  imageContainer: {
-    height: 420,
-    width: 320,
-    backgroundColor: 'white',
-    borderRadius: 21,
-    elevation: 3,
-    marginTop: 100
-  },
-  image: {
-    height: 130,
+  infoContainer: {
+    height: '44%',
     width: '100%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: '#f0f0f0',
+    elevation: 3,
   },
-  avatarContainer: {
-    height: 100,
-    width: 100,
-    alignSelf: 'center',
-    position: 'absolute',
-    top: 80,
+  backgroundImage: {
+    height: 125,
+    width: '100%',
   },
-  avatar: {
-    height: 100,
-    width: 100,
-    borderRadius: 60,
-    backgroundColor: 'black'
-  },
-  textContainer: {
+  profileImageContainer: {
     display: 'flex',
     flexDirection: 'column',
-
-    height: 26,
-    minWidth: 169,
-
-    top: 75,
-    alignItems: 'center',
+    height: 80,
+    width: 80,
+    borderRadius: 60,
+    padding: 5,
+    justifyContent: 'center',
+    backgroundColor: '#f0f0f0',
+    marginLeft: '5%',
+    bottom: '10%'
   },
-  text: {
+  profileImage: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 60,
     alignSelf: 'center',
+  },
+  nameContainer: {
+    marginLeft: 15,
+    bottom: '9%',
+  },
+  nameText:{
+    fontSize: 24,
     fontWeight: 'bold',
+    color: '#000000',
+  },
+  buttonContainer: {
+    display: 'flex',
+    backgroundColor: '#38a69d',
+    width: '28%',
+    height: '11%',
+    borderRadius: 20,
+    padding: '0.5%',
+    alignSelf: 'center',
+    bottom: '57%', 
+    left: '33%',
+  },
+  buttonSearchedContainer: {
+    display: 'flex',
+    backgroundColor: '#38a69d',
+    width: '36%',
+    height: '11%',
+    borderRadius: 20,
+    padding: '0.5%',
+    alignSelf: 'center',
+    bottom: '45%', 
+    left: '30%',
+  },
+  buttonAlreadySearchedContainer: {
+    display: 'flex',
+    backgroundColor: '#38a69d',
+    width: '38%',
+    height: '11%',
+    borderRadius: 20,
+    padding: '0.5%',
+    alignSelf: 'center',
+    bottom: '45%', 
+    left: '30%',
+  },
+  buttonSolicitationContainer: {
+    display: 'flex',
+    backgroundColor: '#38a69d',
+    width: '40%',
+    height: '11%',
+    borderRadius: 20,
+    padding: '0.5%',
+    alignSelf: 'center',
+    bottom: '57%', 
+    left: '28%',
   },
   button: {
-    backgroundColor: '#38a69d',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 20,
+    height: '99%',
     width: '100%',
-    minHeight: 50,
-    borderRadius: 4,
-    paddingVertical: 8,
-    marginTop: 14,
-    justifyContent: 'center',
-    alignItems: 'center'
+  },
+  buttonSolicitation: {
+    backgroundColor: '#38a69d',
+    borderRadius: 20,
+    height: '99%',
+    width: '100%',
+  },
+  buttonSolicitationText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginTop: '3%',
   },
   buttonText: {
-    color: '#FFF',
+    color: '#000000',
     fontSize: 14,
-    fontWeight: 'bold'
+    fontWeight: 'bold', 
+    alignSelf: 'center',
+    marginTop: '6%',
+  },
+  buttonSearchText: {
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginTop: '4%',
+  },
+  gamesContainer: {
+    bottom: '7%',
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  bioContainer: {
+    bottom: '7%',
+    marginLeft: 15,
+  },
+  friendsContainer: {
+    marginTop: 10, 
+    marginLeft: 15, 
+    bottom: '5%',
+    width: '18%', 
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
   buttonReject: {
     backgroundColor: '#FF0000',
-    width: '100%',
-    borderRadius: 4,
+    height: '99%',
+    width: '95%',
+    borderRadius: 20,
     paddingVertical: 8,
-    marginTop: 14,
+    marginTop: 8,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    left: '6%',
+  },
+  buttonReportSend: {
+    backgroundColor: '#FF0000',
+    height: '68%',
+    width: '95%',
+    borderRadius: 20,
+    paddingVertical: 8,
+    marginTop: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: '3%',
+  },
+  buttonReportRemove: {
+    backgroundColor: '#FF0000',
+    height: '60%',
+    width: '93%',
+    borderRadius: 20,
+    paddingVertical: 8,
+    marginTop: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: '6%',
+  },
+  buttonReportAccept: {
+    backgroundColor: '#FF0000',
+    height: '64%',
+    width: '94%',
+    borderRadius: 20,
+    paddingVertical: 8,
+    marginTop: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: '7%',
+  },
+  buttonReportSearch: {
+    backgroundColor: '#FF0000',
+    height: '68%',
+    width: '99%',
+    borderRadius: 20,
+    paddingVertical: 8,
+    marginTop: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: '1%',
+  },
+  buttonReportText: {
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginBottom: '0.5%',
+  },
+  buttonRejectText: {
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignSelf: 'center',
   },
 });
 
