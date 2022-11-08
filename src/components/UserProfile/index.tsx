@@ -49,10 +49,10 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(requestReceived && !requestSent){
     return (
       <View style={ styles.buttonSolicitationContainer }>
-        <TouchableOpacity style={styles.buttonSolicitation} onPress={() => UserService.acceptFriendRequest({user_id: user.id, friend_Id:me.id})}>
+        <TouchableOpacity style={styles.buttonSolicitation} onPress={() => UserService.acceptFriendRequest({fromId: user.id, toId:me.id})}>
           <Text style={styles.buttonSolicitationText}>Aceitar como amigo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.rejectFriendRequest({user_id: user.id, friend_Id:me.id})}>
+        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.rejectFriendRequest({fromId: user.id, toId:me.id})}>
           <Text style={styles.buttonRejectText}>Rejeitar solicitação</Text>
         </TouchableOpacity>
         <View>
@@ -67,7 +67,7 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(isMyFriend){
     return (
       <View style={ styles.buttonSolicitationContainer }>
-        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.removeFriend({user_id: me.id, friend_Id:user.id })}>
+        <TouchableOpacity style={styles.buttonReject} onPress={() => UserService.removeFriend({fromId: me.id, toId:user.id})}>
           <Text style={styles.buttonRejectText}>Desfazer amizade</Text>
         </TouchableOpacity>
         <View>
@@ -82,7 +82,7 @@ function generateFriendButton( requestSent:boolean, requestReceived:boolean, isM
   if(!requestReceived && !requestSent && !isMyFriend){
     return (
       <View style={ styles.buttonSearchedContainer }>
-        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({user_id:me.id, friend_Id:user.id})}>
+        <TouchableOpacity style={styles.button} onPress={() => UserService.sendFriendRequest({fromId: me.id, toId:user.id})}>
           <Text style={styles.buttonSearchText}>Enviar solicitação</Text>
         </TouchableOpacity>
         <View>
@@ -113,13 +113,14 @@ export default function UserProfile({ user }: Props) {
     requestReceived = me.friendUserFriends.some((friendship) => friendship.user_id === profileOwner.id);
 
     isMyFriend = requestSent && requestReceived;
+    console.log(requestSent)
+    console.log(requestReceived)
   }
   catch{
     console.log("erro ao caregar listas de amigos :(");
   }
   finally{
     console.log(isMe, profileOwner, me)
-
   }
   
   function gamesNames(){
@@ -259,7 +260,6 @@ const styles = StyleSheet.create({
   },
   buttonSolicitationContainer: {
     display: 'flex',
-    backgroundColor: '#38a69d',
     width: '40%',
     height: '11%',
     borderRadius: 20,
