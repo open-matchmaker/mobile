@@ -44,4 +44,8 @@ export default {
     const response = await api.get<User[]>('/user/');
     return response.data;
 },
+  async updateUserImage(image:any){
+    const response = await api.post('/user/updateImage',image)
+    return response
+  }
 }

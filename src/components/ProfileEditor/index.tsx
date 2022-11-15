@@ -78,6 +78,7 @@ export default function UserProfile({ user }: Props) {
       });
   
       console.log(result);
+      UserService.updateUserImage(result);
   
       if (!result.cancelled) {
         setImage(result.uri);
