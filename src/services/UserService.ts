@@ -21,7 +21,7 @@ export default {
     return response
   },
   async rejectFriendRequest(userId:any){
-    const response = await api.post('/user/rejectinvite',userId)
+    const response = await api.post('/user/declineinvite',userId)
     return response
   },
   async removeFriend(userId:any){
