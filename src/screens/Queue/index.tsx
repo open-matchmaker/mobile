@@ -25,20 +25,35 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
 
   const [userInQueue, setUserInQueue] = useState(false);
   async function joinQueue(id){
+    console.log(valueGame, qntPlayers);
+    if(!valueGame){
+      alert('Selecione um jogo')
+      return
+    }
+    if(qntPlayers < 2){
+      alert('Selecione um modo de jogo válido')
+      return
+    }
+
     const player = await UserService.getUserById(id)
-    console.log(itemsGame[0].value, itemsMode);
     
-    socket.emit('joinRoom', {username: String(player.id), room: itemsGame[0].value, numberPlayers: itemsMode[0].value });
-    let roomGame = itemsGame[0].value+String(itemsMode[0].value)
+    socket.emit('joinRoom', {username: String(player.id), room: valueGame, numberPlayers: qntPlayers });
+    let roomGame = valueGame+String(qntPlayers)
+    console.log(roomGame)
     socket.on(roomGame, (message) => {
       alert('Partida encontrada')
       console.log(message.queue)
       let players = []
       message.queue.forEach(element => { 
-        players.push(UserService.getUserById(Number(element.playerName)))
-        
+        UserService.getUserById(Number(element.playerName)).then((response) => {
+          console.log('response', response)
+          
+          players.push(response)
+          console.log('players', players)
+          setPlayers(players)
+        }
+        )
       });
-      setPlayers(players)
       console.log(message)})
 
     // await queueService.joinQueue(id).then((response) => {
@@ -50,7 +65,8 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
 
 
   async function leaveQueue(id:any){
-    socket.emit('quitQueue', {room:itemsGame[0].value  ,numberPlayers:itemsMode[0].value , username: String(id)})
+    socket.emit('quitQueue', {room:valueGame  ,numberPlayers:qntPlayers , username: String(id)})
+    setUserInQueue(false);
     alert('user disconected')
   }
     const { account } = useApp();
@@ -68,7 +84,9 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
         {label: 'Squads', value: 4}
     ]);
 
-    const [players, setPlayers] = useState([account, account, account, account]);
+    const [qntPlayers, setQntPlayers] = useState(2);
+
+    const [players, setPlayers] = useState([]);
 
     
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -88,17 +106,21 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
               setOpen={setOpenGame}
               setValue={setValueGame}
               setItems={setItemsGame} />
-          </View><View style={styles.dropdown2}>
-              <DropDownPicker
-                placeholder="Escolha um modo"
-                open={openMode}
-                value={valueMode}
-                items={itemsMode}
-                setOpen={setOpenMode}
-                setValue={setValueMode}
-                setItems={setItemsMode} />
-            </View>
-          </View> : <View></View>}
+          </View>
+          <View style={styles.fabPickers}>
+              <TouchableOpacity onPress={() => setQntPlayers(qntPlayers-1)}>
+                <Text style={styles.fab}>-</Text>
+              </TouchableOpacity>
+              <View style={styles.fabView}>
+              <Text style={styles.text}>{qntPlayers}</Text>
+              </View>
+              <TouchableOpacity onPress={() => setQntPlayers(qntPlayers+1)}>
+                <Text style={styles.fab}>+</Text>
+              </TouchableOpacity>
+          </View>
+        </View> 
+        : 
+        <View></View>}
 
 
         <View style={ userInQueue ? styles.leave : styles.find }>
@@ -129,7 +151,7 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
 
 
       <View>
-      {players && players.map((user, i) => 
+      {players && userInQueue && players.map((user, i) => 
         <TouchableOpacity key={i} style={ styles.friendsButton } onPress={()=>{navigation.push('App', { screen: 'Profile', params: { user: user } })}}>
 
           <View style={ styles.friendsButtonContent }>
@@ -259,7 +281,36 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       paddingLeft: 10,
     },
+    fab: {
+      borderRadius: 50,
+      backgroundColor: '#38a69d',
+      width: 30,
+      height: 30,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      color: '#FFF',
+      fontSize: 20,
+      fontWeight: 'bold',
+      margin: 10,
 
+    },
+    fabPickers:{
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 30,
+      margin: 10,
+      
+    },
+    fabView:{
+      backgroundColor: "#f5f5f5",
+      width: 30,
+      height: 30,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+
+    }
 
 
 
