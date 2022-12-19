@@ -46,7 +46,7 @@ const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(
 return (
   <View style={ styles.container }>
     <TextInput style={ styles.input } onChangeText={(text) => userSearch(allUsers, text.toLowerCase())} 
-    placeholder="Search"/>
+    placeholder="Buscar Usuário..."/>
     <ScrollView>
     {lista && lista.map((user, i) => 
       <TouchableOpacity key={i} style={ styles.friendsButton } onPress={()=>{navigation.push('App', { screen: 'Profile', params: { user: user } })}}>
