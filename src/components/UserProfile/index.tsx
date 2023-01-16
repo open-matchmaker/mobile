@@ -150,7 +150,7 @@ export default function UserProfile({ user }: Props) {
           <Image style={styles.backgroundImage} source={(require('../../assets/img/bg.jpg'))} />
         </View>
         <View style={ styles.profileImageContainer }>
-          <Image style={styles.profileImage} source={require('../../assets/img/user.jpg')} />
+          <Image style={styles.profileImage} source={profileOwner.image ||require('../../assets/img/user.jpg')} />
         </View>
         <View style={ styles.nameContainer }>
           <Text style={styles.nameText}>

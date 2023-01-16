@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppStackParamList, RootStackParamList } from "../../@types/routes";
 
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from "react-native";
@@ -51,6 +51,7 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
           players.push(response)
           console.log('players', players)
           setPlayers(players)
+         
         }
         )
       });
