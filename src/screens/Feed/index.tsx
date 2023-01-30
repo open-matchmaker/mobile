@@ -35,7 +35,7 @@ export default function Feed() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={{ flex: 1 }}
     >
-      <Button onPress={() => logout()} title='logout' />
+      {/* <Button onPress={() => logout()} title='logout' /> */}
       <FlatList<Post>
         removeClippedSubviews={false}
         data={posts}
