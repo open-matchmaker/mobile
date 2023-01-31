@@ -20,12 +20,22 @@ function addFriend(){
 function generateFriendButton( requestSent:boolean, requestReceived:boolean, isMyFriend:boolean, isMe:boolean, user:User) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const me = useApp().account;
+  const { logout } = useApp();
   if(isMe){
     return(
       <View style={ styles.buttonContainer }>
         <TouchableOpacity style={styles.button} onPress={() => navigation.push('App', { screen: 'Editor', params: { user: user } })}>
           <Text style={styles.buttonText}>Editar perfil</Text>
         </TouchableOpacity>
+        <View>
+
+        <TouchableOpacity 
+          style={styles.buttonReject}
+          onPress ={() =>logout()}
+          >
+          <Text style={styles.buttonRejectText}>Sair</Text>
+        </TouchableOpacity>
+          </View>
       </View>
     );
   }
@@ -150,7 +160,7 @@ export default function UserProfile({ user }: Props) {
           <Image style={styles.backgroundImage} source={(require('../../assets/img/bg.jpg'))} />
         </View>
         <View style={ styles.profileImageContainer }>
-          <Image style={styles.profileImage} source={require('../../assets/img/user.jpg')} />
+          <Image style={styles.profileImage} source={profileOwner.image ||require('../../assets/img/user.jpg')} />
         </View>
         <View style={ styles.nameContainer }>
           <Text style={styles.nameText}>

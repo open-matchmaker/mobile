@@ -7,6 +7,7 @@ export interface User {
   friendUserFriends: [];
   userFriends: [];
   playsGames: Game[];
+  image:any;
 }
 export interface UpdateDto {
   bio: string;

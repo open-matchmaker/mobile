@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppStackParamList, RootStackParamList } from "../../@types/routes";
 
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from "react-native";
@@ -25,52 +25,69 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
 
   const [userInQueue, setUserInQueue] = useState(false);
   async function joinQueue(id){
-    const player = await UserService.getUserById(id)
+    console.log(valueGame, qntPlayers);
+    if(!valueGame){
+      alert('Selecione um jogo')
+      return
+    }
+    if(qntPlayers < 2){
+      alert('Selecione um modo de jogo válido')
+      return
+    }
 
-    socket.emit('joinRoom', {username: player.username, room: 'League Of Legends', numberPlayers:2});
-    socket.on('League Of Legends2', (message) => {
+    const player = await UserService.getUserById(id)
+    
+    socket.emit('joinRoom', {username: String(player.id), room: valueGame, numberPlayers: qntPlayers });
+    let roomGame = valueGame+String(qntPlayers)
+    console.log(roomGame)
+    socket.on(roomGame, (message) => {
+      alert('Partida encontrada')
       console.log(message.queue)
       let players = []
       message.queue.forEach(element => { 
-        players.push(UserService.getUserById(element.playerName))
-        
+        UserService.getUserById(Number(element.playerName)).then((response) => {
+          console.log('response', response)
+          
+          players.push(response)
+          console.log('players', players)
+          setPlayers(players)
+         
+        }
+        )
       });
-      setPlayers(players)
       console.log(message)})
 
     // await queueService.joinQueue(id).then((response) => {
     //   console.log(response);
       setUserInQueue(true);
     //   setPlayers([account])
-      alert('Partida encontrada')
   
   }
 
 
   async function leaveQueue(id:any){
-    await queueService.leaveQueue(id).then((response) => {
-      console.log(response);
-      setUserInQueue(response);
-      setPlayers([])
-    }
-    );
+    socket.emit('quitQueue', {room:valueGame  ,numberPlayers:qntPlayers , username: String(id)})
+    setUserInQueue(false);
+    alert('user disconected')
   }
     const { account } = useApp();
     const [openGame, setOpenGame] = useState(false);
     const [valueGame, setValueGame] = useState(null);
     const [itemsGame, setItemsGame] = useState([
-      {label: 'League of Legends', value: 'lol'},
+      {label: 'League of Legends', value: 'LeagueOfLegends'},
       {label: 'Valorant', value: 'valorant'}
     ]);
 
     const [openMode, setOpenMode] = useState(false);
     const [valueMode, setValueMode] = useState(null);
     const [itemsMode, setItemsMode] = useState([
-        {label: 'Duos', value: 'duos'},
-        {label: 'Squads', value: 'squads'}
+        {label: 'Duos', value: 2},
+        {label: 'Squads', value: 4}
     ]);
 
-    const [players, setPlayers] = useState([account, account, account, account]);
+    const [qntPlayers, setQntPlayers] = useState(2);
+
+    const [players, setPlayers] = useState([]);
 
     
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -80,8 +97,6 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
 
         {!userInQueue ? 
         <View style={styles.dropdownContainer}>
-          <View style={styles.dropdown1}>
-
             <DropDownPicker
               placeholder="Escolha um jogo"
               open={openGame}
@@ -90,17 +105,20 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
               setOpen={setOpenGame}
               setValue={setValueGame}
               setItems={setItemsGame} />
-          </View><View style={styles.dropdown2}>
-              <DropDownPicker
-                placeholder="Escolha um modo"
-                open={openMode}
-                value={valueMode}
-                items={itemsMode}
-                setOpen={setOpenMode}
-                setValue={setValueMode}
-                setItems={setItemsMode} />
-            </View>
-          </View> : <View></View>}
+          <View style={styles.fabPickers}>
+              <TouchableOpacity onPress={() => setQntPlayers(qntPlayers-1)}>
+                <Text style={styles.fab}>-</Text>
+              </TouchableOpacity>
+              <View style={styles.fabView}>
+              <Text style={styles.text}>{qntPlayers}</Text>
+              </View>
+              <TouchableOpacity onPress={() => setQntPlayers(qntPlayers+1)}>
+                <Text style={styles.fab}>+</Text>
+              </TouchableOpacity>
+          </View>
+        </View> 
+        : 
+        <View></View>}
 
 
         <View style={ userInQueue ? styles.leave : styles.find }>
@@ -131,7 +149,7 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
 
 
       <View>
-      {players && players.map((user, i) => 
+      {players && userInQueue && players.map((user, i) => 
         <TouchableOpacity key={i} style={ styles.friendsButton } onPress={()=>{navigation.push('App', { screen: 'Profile', params: { user: user } })}}>
 
           <View style={ styles.friendsButtonContent }>
@@ -261,7 +279,36 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
       paddingLeft: 10,
     },
+    fab: {
+      borderRadius: 50,
+      backgroundColor: '#38a69d',
+      width: 30,
+      height: 30,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      color: '#FFF',
+      fontSize: 20,
+      fontWeight: 'bold',
+      margin: 10,
 
+    },
+    fabPickers:{
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 30,
+      margin: 10,
+      
+    },
+    fabView:{
+      backgroundColor: "#f5f5f5",
+      width: 30,
+      height: 30,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+
+    }
 
 
 

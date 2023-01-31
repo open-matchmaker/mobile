@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Button } from "react-native";
 import {CheckBox, Input} from 'react-native-elements';
 import useApp from "../../hooks/useApp";
 import UserService from "../../services/UserService";
@@ -10,6 +10,7 @@ import GameService from "../../services/GameService";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../@types/routes";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from 'expo-image-picker';
 
 interface Props {
     user: User;
@@ -64,11 +65,34 @@ export default function UserProfile({ user }: Props) {
     }
     , []);
 
+    const [image, setImage] = useState(null);
+
+    const pickImage = async () => {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        base64: true,
+        quality: 1,
+      });
+  
+      console.log(result);
+      UserService.updateUserImage(result, user.id);
+  
+      if (!result.cancelled) {
+        setImage(result.uri);
+      }
+    };
+
+
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
    
     return(
         <View style={styles.container}>
+
+
             <Formik<UpdateDto>
         initialValues={{ bio: user.bio}}
         onSubmit={onSubmit}
@@ -76,6 +100,12 @@ export default function UserProfile({ user }: Props) {
         >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
           <View style={styles.editContainer}>
+            <View>
+      <TouchableOpacity style={styles.button} onPress={pickImage} >
+      <Text style={styles.buttonText}>Selecionar imagem</Text>
+      </TouchableOpacity>
+      {image && <Image source={{ uri: image}} style={{ width: 200, height: 200 }} />}
+    </View>
             <Text style={styles.text}>Bio</Text>
             <TextInput
               placeholder={user.bio || 'Digite sua bio'}            

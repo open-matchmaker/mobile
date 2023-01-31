@@ -26,10 +26,9 @@ export default function GameListComponent() {
     , []);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     return (
-        <View>
+        <View style={styles.container}>
         <View style={styles.games}>
-                <Text style={styles.text}>Jogos</Text>
-                <TextInput onChangeText={onChangeText} placeholder="Digite o nome do jogo"/>
+                <TextInput style={styles.input} onChangeText={onChangeText} placeholder="Buscar Jogo..."/>
                 {suggestions && suggestions.map((game, i) => 
                 
                 <View key={i} style={styles.game}>
@@ -47,10 +46,18 @@ export default function GameListComponent() {
     const styles = StyleSheet.create({
         container: {
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
+            backgroundColor: '#FFF',
+            padding: 10,
+            scrollEnabled: false
     
         }, 
+        input: {
+            margin: 5,
+            borderColor: "gray",
+            borderWidth: 1,
+            borderRadius: 15,
+            padding: 10,
+          },
         text: {
             fontSize: 20,	
             fontWeight: "bold",

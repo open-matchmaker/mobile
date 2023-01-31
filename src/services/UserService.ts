@@ -44,4 +44,17 @@ export default {
     const response = await api.get<User[]>('/user/');
     return response.data;
 },
+ byteCount(s) {
+  return encodeURI(s).split(/%..|./).length - 1;
+},
+
+  async updateUserImage(image:any,id:number){
+    const response = await api.patch('/image/upload',{id:id, image:{
+      location: image.uri,
+      key: `${id}.jpg`,
+      mimetype: 'image/jpg',
+      size: this.byteCount(image.base64)/1.37
+    }})
+    return response
+  }
 }
