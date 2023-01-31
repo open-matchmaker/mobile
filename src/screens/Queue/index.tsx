@@ -97,8 +97,6 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
 
         {!userInQueue ? 
         <View style={styles.dropdownContainer}>
-          <View style={styles.dropdown1}>
-
             <DropDownPicker
               placeholder="Escolha um jogo"
               open={openGame}
@@ -107,7 +105,6 @@ export default function Queue({ route }: NativeStackScreenProps<AppStackParamLis
               setOpen={setOpenGame}
               setValue={setValueGame}
               setItems={setItemsGame} />
-          </View>
           <View style={styles.fabPickers}>
               <TouchableOpacity onPress={() => setQntPlayers(qntPlayers-1)}>
                 <Text style={styles.fab}>-</Text>
